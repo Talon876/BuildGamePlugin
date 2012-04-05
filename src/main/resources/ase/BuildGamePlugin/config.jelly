@@ -1,0 +1,31 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+
+    <st:once>
+        <script type="text/javascript" src="${rootURL}/plugin/myPlugin/js/myPlugin.js" />
+    </st:once>
+  
+   <!-- Textfield -->  
+  
+   <f:entry title="Test name" field="name">
+        <f:textbox default="Type the name of the test..."/>
+   </f:entry>
+  
+   <!-- Checkbox: The 'field'-attribute specify which property that will be used. -->
+ 
+   <f:entry title="${%Create test report?}" field="isSelected">
+       <f:checkbox/>
+   </f:entry> 
+
+   <!-- ArrayList: field="testlist" is an array, and 'repeatableProperty' will display all its elements. 
+        A default testlist will be returned by the getDefaultTestlist() method in the descriptor class.
+        That method is called here using the name: 'descriptor.defaultTestlist', no 'get', and the first letter in minor. -->        
+
+   <f:entry>
+         <f:repeatableProperty field="testlist" default="${descriptor.defaultTestlist}" noAddButton="true"/> 
+   </f:entry>
+
+   <!-- Some javascript... -->
+   <f:entry>   
+   <input type="button" value="Click here!" onClick="sayHi();"/>
+   </f:entry>
+</j:jelly>
