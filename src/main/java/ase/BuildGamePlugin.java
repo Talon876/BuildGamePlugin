@@ -1,5 +1,3 @@
-// Even a warning example, is an example. :-X
-
 package ase;
 
 import java.util.ArrayList;
