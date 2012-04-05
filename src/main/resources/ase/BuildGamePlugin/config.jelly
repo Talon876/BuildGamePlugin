@@ -1,7 +1,7 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
 
     <st:once>
-        <script type="text/javascript" src="${rootURL}/plugin/myPlugin/js/myPlugin.js" />
+        <script type="text/javascript" src="${rootURL}/plugin/BuildGamePlugin/js/BuildGamePlugin.js" />
     </st:once>
   
    <!-- Textfield -->  
