@@ -1,5 +1,3 @@
-// Even a warning example, is an example. :-X
-
 package ase;
 
 import java.util.ArrayList;
@@ -22,8 +20,7 @@ public class BuildGamePlugin extends Builder
 	// Fields in config.jelly must match the parameter names in the
 	// "DataBoundConstructor"
 	@DataBoundConstructor
-	public BuildGamePlugin(String name, boolean isSelected,
-			ArrayList<Checkbox> testlist)
+	public BuildGamePlugin(String name, boolean isSelected, ArrayList<Checkbox> testlist)
 	{
 		this.name = name;
 		this.isSelected = isSelected;
@@ -31,8 +28,7 @@ public class BuildGamePlugin extends Builder
 	}
 
 	@Override
-	public boolean perform(AbstractBuild build, Launcher launcher,
-			BuildListener listener)
+	public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener)
 	{
 		// This is what will be executed when the job is build.
 		// This also shows how you can use listner and build.
@@ -43,8 +39,7 @@ public class BuildGamePlugin extends Builder
 		if (isSelected)
 			listener.getLogger().println("Test report is created.");
 
-		listener.getLogger().println(
-				"This is job number: " + build.getDisplayName());
+		listener.getLogger().println("This is job number: " + build.getDisplayName());
 		return true;
 	}
 
@@ -72,15 +67,12 @@ public class BuildGamePlugin extends Builder
 	}
 
 	@Extension
-	// This indicates to Jenkins that this is an implementation of an extension
-	// point.
-	public static final class DescriptorImpl extends
-			BuildStepDescriptor<Builder>
+	// This indicates to Jenkins that this is an implementation of an extension point
+	public static final class DescriptorImpl extends BuildStepDescriptor<Builder>
 	{
 		public boolean isApplicable(Class<? extends AbstractProject> aClass)
 		{
-			// Indicates that this builder can be used with all kinds of project
-			// types
+			// Indicates that this builder can be used with all kinds of project types
 			return true;
 		}
 
