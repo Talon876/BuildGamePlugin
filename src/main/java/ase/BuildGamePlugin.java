@@ -7,8 +7,8 @@ import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
-import hudson.tasks.Builder;
 import hudson.tasks.Notifier;
+import hudson.tasks.Publisher;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -36,7 +36,7 @@ public class BuildGamePlugin extends Notifier
 
 	@Extension(ordinal=5001)
 	// This indicates to Jenkins that this is an implementation of an extension point
-	public static final class DescriptorImpl extends BuildStepDescriptor<Builder>
+	public static final class DescriptorImpl extends BuildStepDescriptor<Publisher>
 	{
 		public boolean isApplicable(Class<? extends AbstractProject> aClass)
 		{
