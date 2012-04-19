@@ -18,10 +18,16 @@ import org.kohsuke.stapler.DataBoundConstructor;
 
 public class BuildGamePlugin extends Notifier
 {
+	private String sonarUrl = "";
+	private String sonarUsername = "";
+	private String sonarPassword = "";
 
 	@DataBoundConstructor
-	public BuildGamePlugin()
+	public BuildGamePlugin(String sonarUrl, String sonarUsername, String sonarPassword)
 	{
+		this.sonarUrl = sonarUrl;
+		this.sonarUsername = sonarUsername;
+		this.sonarPassword = sonarPassword;
 	}
 
 	@Override
@@ -31,6 +37,11 @@ public class BuildGamePlugin extends Notifier
 		
 		String project = getProjectId(build.getProject());
 		listener.getLogger().println("Project Id returned: " + project);
+		listener.getLogger().println("Sonar URL from textfield: " + sonarUrl);
+		listener.getLogger().println("Sonar Database Username from textfield: " + sonarUsername);
+		listener.getLogger().println("Sonar Database Password from textfield: " + sonarPassword);
+		
+		
 		int pointValue = ComputePoints.getPointValue(project, "http://192.168.1.128:9000", "sonar", "sonar");
 		listener.getLogger().println("That build was worth " + pointValue + " points.");
 		listener.getLogger().println("Finished BuildGame plugin execution.");
