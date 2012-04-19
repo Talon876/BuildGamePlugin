@@ -25,7 +25,7 @@ public class BuildGamePlugin extends Notifier
 	{
 		listener.getLogger().println("Executing BuildGame plugin...");
 		//do stuff
-		int pointValue = ComputePoints.getPointValue("com.deflexicon.com:SkypeBot", "http://192.168.1.128:9000", "sonar", "sonar");
+		int pointValue = ComputePoints.getPointValue("com.deflexicon.bot:SkypeBot", "http://192.168.1.128:9000", "sonar", "sonar");
 		listener.getLogger().println("That build was worth " + pointValue + " points.");
 		
 		listener.getLogger().println("Finished BuildGame plugin execution.");
