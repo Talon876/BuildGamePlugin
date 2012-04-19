@@ -1,72 +1,40 @@
 package ase;
 
-import java.util.ArrayList;
-
-import hudson.Launcher;
 import hudson.Extension;
-import hudson.model.AbstractBuild;
+import hudson.Launcher;
 import hudson.model.BuildListener;
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
+import hudson.tasks.BuildStepMonitor;
+import hudson.tasks.Builder;
+import hudson.tasks.Notifier;
+
 import org.kohsuke.stapler.DataBoundConstructor;
 
-public class BuildGamePlugin extends Builder
+public class BuildGamePlugin extends Notifier
 {
-	private final String name;
-	public final boolean isSelected;
-	public ArrayList<Checkbox> testlist;
 
 	// Fields in config.jelly must match the parameter names in the
 	// "DataBoundConstructor"
 	@DataBoundConstructor
-	public BuildGamePlugin(String name, boolean isSelected, ArrayList<Checkbox> testlist)
+	public BuildGamePlugin()
 	{
-		this.name = name;
-		this.isSelected = isSelected;
-		this.testlist = testlist;
 	}
 
 	@Override
-	public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener)
+	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
 	{
-		// This is what will be executed when the job is build.
-		// This also shows how you can use listner and build.
-
-		// Will be seen in the jenkins Console output
-		listener.getLogger().println("The name of the test is: " + name);
-
-		if (isSelected)
-			listener.getLogger().println("Test report is created.");
-
-		listener.getLogger().println("This is job number: " + build.getDisplayName());
+		listener.getLogger().println("Executing BuildGame plugin...");
+		//do stuff
+		int pointValue = ComputePoints.getPointValue("com.deflexicon.com:SkypeBot", "http://192.168.1.128:9000", "sonar", "sonar");
+		listener.getLogger().println("That build was worth " + pointValue + " points.");
+		
+		listener.getLogger().println("Finished BuildGame plugin execution.");
 		return true;
 	}
 
-	// We'll use this from the config.jelly
-	public String getName()
-	{
-		return name;
-	}
-
-	public boolean isSelected()
-	{
-		return isSelected;
-	}
-
-	public ArrayList<Checkbox> getTestlist()
-	{
-		return testlist;
-	}
-
-	// Overridden for better type safety.
-	@Override
-	public DescriptorImpl getDescriptor()
-	{
-		return (DescriptorImpl) super.getDescriptor();
-	}
-
-	@Extension
+	@Extension(ordinal=5001)
 	// This indicates to Jenkins that this is an implementation of an extension point
 	public static final class DescriptorImpl extends BuildStepDescriptor<Builder>
 	{
@@ -76,23 +44,15 @@ public class BuildGamePlugin extends Builder
 			return true;
 		}
 
-		public ArrayList<Checkbox> getDefaultTestlist()
-		{
-			ArrayList<Checkbox> testlist = new ArrayList<Checkbox>();
-
-			Checkbox test1 = new Checkbox("Test1", false);
-			Checkbox test2 = new Checkbox("Test2", false);
-
-			testlist.add(test1);
-			testlist.add(test2);
-
-			return testlist;
-		}
-
 		// This human readable name is used in the configuration screen.
 		public String getDisplayName()
 		{
-			return "Choose tests...";
+			return "Run BuildGame";
 		}
+	}
+
+	public BuildStepMonitor getRequiredMonitorService()
+	{
+		return BuildStepMonitor.BUILD;
 	}
 }
