@@ -47,10 +47,11 @@ public class ComputePoints
 		Sonar sonar = Sonar.create(sonarUrl, sonarUsername, sonarPassword);
 		ResourceQuery query = ResourceQuery.createForMetrics(projectName, ComputePoints.METRICS);
 		query.setIncludeTrends(true);
-		
+		System.out.println("URL: " + query.getUrl());
 		Resource struts = sonar.find(query);
 		for(int i = 0; i < ComputePoints.METRICS.length; i++)
 		{
+			System.out.println(ComputePoints.METRICS[i]);
 			Measure currentMeasure = struts.getMeasure(ComputePoints.METRICS[i]);
 			if(currentMeasure != null)
 			{
