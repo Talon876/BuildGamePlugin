@@ -15,8 +15,6 @@ import org.kohsuke.stapler.DataBoundConstructor;
 public class BuildGamePlugin extends Notifier
 {
 
-	// Fields in config.jelly must match the parameter names in the
-	// "DataBoundConstructor"
 	@DataBoundConstructor
 	public BuildGamePlugin()
 	{
@@ -34,8 +32,7 @@ public class BuildGamePlugin extends Notifier
 		return true;
 	}
 
-	@Extension(ordinal=5001)
-	// This indicates to Jenkins that this is an implementation of an extension point
+	@Extension(ordinal=999)
 	public static final class DescriptorImpl extends BuildStepDescriptor<Publisher>
 	{
 		public boolean isApplicable(Class<? extends AbstractProject> aClass)
