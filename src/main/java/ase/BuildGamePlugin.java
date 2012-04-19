@@ -29,17 +29,15 @@ public class BuildGamePlugin extends Notifier
 	{
 		listener.getLogger().println("Executing BuildGame plugin...");
 		
-		String url = getSonarUrl(build.getProject());
-		listener.getLogger().println("getSonarUrl returned: " + url);
-		//do stuff
-		int pointValue = ComputePoints.getPointValue("com.deflexicon.bot:SkypeBot", "http://192.168.1.128:9000", "sonar", "sonar");
+		String project = getProjectId(build.getProject());
+		listener.getLogger().println("Project Id returned: " + project);
+		int pointValue = ComputePoints.getPointValue(project, "http://192.168.1.128:9000", "sonar", "sonar");
 		listener.getLogger().println("That build was worth " + pointValue + " points.");
-		
 		listener.getLogger().println("Finished BuildGame plugin execution.");
 		return true;
 	}
 	
-	private String getSonarUrl(AbstractProject<?,?> project)
+	private String getProjectId(AbstractProject<?,?> project)
 	{
 		//SonarInstallation sonarInstallation = getInstallation();
 		String url = "";
