@@ -3,15 +3,15 @@
    <!-- Textfields -->  
   
    <f:entry title="Sonar URL" field="sonarUrl">
-        <f:textbox default="http://localhost:9000"/>
+        <f:textbox default="http://localhost:9000" value="${instance.getSonarUrl()}"/>
    </f:entry>
    
    <f:entry title="Sonar Database Username" field="sonarUsername">
-        <f:textbox default="sonar"/>
+        <f:textbox default="sonar" value="${instance.getSonarUsername()}"/>
    </f:entry>
    
   <f:entry title="Sonar Database Password" field="sonarPassword">
-        <f:textbox default="sonar"/>
+        <f:textbox default="sonar" value="${instance.getSonarPassword()}"/>
    </f:entry>
   
 </j:jelly>

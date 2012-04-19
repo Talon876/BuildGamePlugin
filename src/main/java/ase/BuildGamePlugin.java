@@ -34,42 +34,41 @@ public class BuildGamePlugin extends Notifier
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
 	{
 		listener.getLogger().println("Executing BuildGame plugin...");
-		
+
 		String project = getProjectId(build.getProject());
 		listener.getLogger().println("Project Id returned: " + project);
 		listener.getLogger().println("Sonar URL from textfield: " + sonarUrl);
 		listener.getLogger().println("Sonar Database Username from textfield: " + sonarUsername);
 		listener.getLogger().println("Sonar Database Password from textfield: " + sonarPassword);
-		
-		
-		int pointValue = ComputePoints.getPointValue(project, "http://192.168.1.128:9000", "sonar", "sonar");
+
+		int pointValue = ComputePoints.getPointValue(project, sonarUrl, sonarUsername, sonarPassword);
 		listener.getLogger().println("That build was worth " + pointValue + " points.");
 		listener.getLogger().println("Finished BuildGame plugin execution.");
 		return true;
 	}
-	
-	private String getProjectId(AbstractProject<?,?> project)
+
+	private String getProjectId(AbstractProject<?, ?> project)
 	{
-		//SonarInstallation sonarInstallation = getInstallation();
+		// SonarInstallation sonarInstallation = getInstallation();
 		String url = "";
-		if(project instanceof AbstractMavenProject)
+		if (project instanceof AbstractMavenProject)
 		{
-			 AbstractMavenProject mavenProject = (AbstractMavenProject) project;
-			 if(mavenProject.getRootProject() instanceof MavenModuleSet)
-			 {
-				 MavenModuleSet mms = (MavenModuleSet) mavenProject.getRootProject();
-				 MavenModule rootModule = mms.getRootModule();
-				 if(rootModule != null)
-				 {
-					 ModuleName moduleName = rootModule.getModuleName();
-					 url += moduleName.groupId + ":" + moduleName.artifactId;
-				 }
-			 }
+			AbstractMavenProject mavenProject = (AbstractMavenProject) project;
+			if (mavenProject.getRootProject() instanceof MavenModuleSet)
+			{
+				MavenModuleSet mms = (MavenModuleSet) mavenProject.getRootProject();
+				MavenModule rootModule = mms.getRootModule();
+				if (rootModule != null)
+				{
+					ModuleName moduleName = rootModule.getModuleName();
+					url += moduleName.groupId + ":" + moduleName.artifactId;
+				}
+			}
 		}
 		return url;
 	}
 
-	@Extension(ordinal=999)
+	@Extension(ordinal = 999)
 	public static final class DescriptorImpl extends BuildStepDescriptor<Publisher>
 	{
 		public boolean isApplicable(Class<? extends AbstractProject> aClass)
@@ -87,5 +86,20 @@ public class BuildGamePlugin extends Notifier
 	public BuildStepMonitor getRequiredMonitorService()
 	{
 		return BuildStepMonitor.BUILD;
+	}
+
+	public String getSonarUrl()
+	{
+		return sonarUrl;
+	}
+
+	public String getSonarUsername()
+	{
+		return sonarUsername;
+	}
+
+	public String getSonarPassword()
+	{
+		return sonarPassword;
 	}
 }
