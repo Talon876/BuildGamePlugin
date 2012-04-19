@@ -51,7 +51,6 @@ public class ComputePoints
 		Resource struts = sonar.find(query);
 		for(int i = 0; i < ComputePoints.METRICS.length; i++)
 		{
-			System.out.println(ComputePoints.METRICS[i]);
 			Measure currentMeasure = struts.getMeasure(ComputePoints.METRICS[i]);
 			if(currentMeasure != null)
 			{
