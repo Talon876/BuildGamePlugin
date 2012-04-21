@@ -1,5 +1,7 @@
 package ase;
 
+import java.text.DecimalFormat;
+
 import org.sonar.wsclient.Sonar;
 import org.sonar.wsclient.services.Measure;
 import org.sonar.wsclient.services.Resource;
@@ -26,7 +28,7 @@ public class ComputePoints
 	 */
 	public static double getPointValue(String projectName, String sonarUrl, String sonarUsername, String sonarPassword)
 	{
-		double pointValue = 0;
+		double pointValue = 0.0;
 		pointValue = ComputePoints.getPointValue(projectName, sonarUrl, sonarUsername, sonarPassword, ComputePoints.DEFAULT_WEIGHTS);		
 		return pointValue;
 	}
@@ -66,9 +68,7 @@ public class ComputePoints
 				}
 			}
 		}
-		int roundedPointValue = (int) Math.round(pointValue);
-		return roundedPointValue;
+		DecimalFormat twoD = new DecimalFormat("#.##");
+		return Double.valueOf(twoD.format(pointValue));
 	}
-	
-	
 }
