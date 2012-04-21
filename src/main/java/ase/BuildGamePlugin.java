@@ -9,10 +9,17 @@ import hudson.maven.MavenModuleSet;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.User;
+import hudson.scm.ChangeLogSet;
+import hudson.scm.ChangeLogSet.Entry;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
+
+import java.io.IOException;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.kohsuke.stapler.DataBoundConstructor;
 
@@ -31,7 +38,7 @@ public class BuildGamePlugin extends Notifier
 	}
 
 	@Override
-	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener)
+	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException
 	{
 		listener.getLogger().println("Executing BuildGame plugin...");
 
@@ -44,7 +51,37 @@ public class BuildGamePlugin extends Notifier
 		int pointValue = ComputePoints.getPointValue(project, sonarUrl, sonarUsername, sonarPassword);
 		listener.getLogger().println("That build was worth " + pointValue + " points.");
 		listener.getLogger().println("Finished BuildGame plugin execution.");
+		
+		Set<User> players = new TreeSet<User>();
+		ChangeLogSet<? extends Entry> changeSet = build.getChangeSet();
+		if(changeSet != null)
+		{
+			for(Entry entry : changeSet)
+			{
+				players.add(entry.getAuthor());
+			}
+		}
+		
+		updateBuildersScore(players, pointValue);
 		return true;
+	}
+
+	private void updateBuildersScore(Set<User> players, int pointValue) throws IOException
+	{
+		if(pointValue != 0)
+		{
+			for(User user : players)
+			{
+				ScoreProperty property = user.getProperty(ScoreProperty.class);
+				if(property == null)
+				{
+					property = new ScoreProperty();
+					user.addProperty(property);
+				}
+				property.setScore(property.getScore() + pointValue);
+				user.save();
+			}
+		}
 	}
 
 	private String getProjectId(AbstractProject<?, ?> project)
