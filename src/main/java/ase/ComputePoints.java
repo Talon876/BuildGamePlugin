@@ -13,7 +13,7 @@ public class ComputePoints
 		"suspect_lcom4_density", "package_tangle_index", "file_tangle_index", "business_value", "technical_debt_ratio" };
 
 	
-	private static final double[] DEFAULT_WEIGHTS = { 1, 1, -1, -1, -1, -1, -1, 1, 1, 1, -1, -1, -1, 1, -1, -1, -1, 0, -1 };
+	private static final double[] DEFAULT_WEIGHTS = { 1, 1, -1, -1, -1, -1, -1, 0.1, 1, 1, -1, -1, -1, 1, -1, -1, -1, 0, -1 };
 
 
 	/**
@@ -56,7 +56,7 @@ public class ComputePoints
 			{
 				try
 				{
-				pointValue += currentMeasure.getVariation1() * weights[i];
+					pointValue += currentMeasure.getVariation1() * weights[i];
 				}
 				catch(Exception ex)
 				{
