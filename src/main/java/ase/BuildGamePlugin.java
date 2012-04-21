@@ -45,7 +45,7 @@ public class BuildGamePlugin extends Notifier
 		String project = getProjectId(build.getProject());
 		listener.getLogger().println("Project Id: " + project);
 		listener.getLogger().println("Sonar URL: " + sonarUrl);
-		int pointValue = ComputePoints.getPointValue(project, sonarUrl, sonarUsername, sonarPassword);
+		double pointValue = ComputePoints.getPointValue(project, sonarUrl, sonarUsername, sonarPassword);
 		listener.getLogger().println("That build was worth " + pointValue + " points.");
 		listener.getLogger().println("Distributing points among players involved with this build...");
 		
@@ -69,7 +69,7 @@ public class BuildGamePlugin extends Notifier
 		return true;
 	}
 
-	private void updateBuildersScore(Set<User> players, int pointValue) throws IOException
+	private void updateBuildersScore(Set<User> players, double pointValue) throws IOException
 	{
 		if(pointValue != 0)
 		{
