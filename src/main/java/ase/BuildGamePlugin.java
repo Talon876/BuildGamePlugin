@@ -41,7 +41,8 @@ public class BuildGamePlugin extends Notifier
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException
 	{
-		boolean buildSuccess = build.getExecutor().abortResult().isBetterOrEqualTo(Result.SUCCESS);
+		boolean buildSuccess = build.getResult().isBetterOrEqualTo(Result.SUCCESS);
+		
 		if (buildSuccess)
 		{
 			listener.getLogger().println("Executing BuildGame plugin...");
