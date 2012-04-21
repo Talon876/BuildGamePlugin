@@ -57,6 +57,7 @@ public class ComputePoints
 				try
 				{
 					pointValue += currentMeasure.getVariation1() * weights[i];
+					System.out.println(ComputePoints.METRICS[i] + " was worth " + currentMeasure.getVariation1() * weights[i]);
 				}
 				catch(Exception ex)
 				{

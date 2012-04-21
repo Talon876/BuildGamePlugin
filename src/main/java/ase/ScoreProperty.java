@@ -30,7 +30,6 @@ public class ScoreProperty extends UserProperty
 	public void setScore(double score)
 	{
 		this.score = score;
-		
 	}
 	
 	@Exported

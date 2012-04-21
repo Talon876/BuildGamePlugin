@@ -43,26 +43,29 @@ public class BuildGamePlugin extends Notifier
 		listener.getLogger().println("Executing BuildGame plugin...");
 
 		String project = getProjectId(build.getProject());
-		listener.getLogger().println("Project Id returned: " + project);
-		listener.getLogger().println("Sonar URL from textfield: " + sonarUrl);
-		listener.getLogger().println("Sonar Database Username from textfield: " + sonarUsername);
-		listener.getLogger().println("Sonar Database Password from textfield: " + sonarPassword);
-
+		listener.getLogger().println("Project Id: " + project);
+		listener.getLogger().println("Sonar URL: " + sonarUrl);
 		int pointValue = ComputePoints.getPointValue(project, sonarUrl, sonarUsername, sonarPassword);
 		listener.getLogger().println("That build was worth " + pointValue + " points.");
-		listener.getLogger().println("Finished BuildGame plugin execution.");
+		listener.getLogger().println("Distributing points among players involved with this build...");
 		
 		Set<User> players = new TreeSet<User>();
 		ChangeLogSet<? extends Entry> changeSet = build.getChangeSet();
+		
 		if(changeSet != null)
 		{
+			int count = 1;
 			for(Entry entry : changeSet)
 			{
 				players.add(entry.getAuthor());
+				listener.getLogger().println("Contributor " + count + ": " + entry.getAuthor());
+				count++;
 			}
 		}
 		
 		updateBuildersScore(players, pointValue);
+		
+		listener.getLogger().println("Finished BuildGame plugin execution.");
 		return true;
 	}
 
@@ -79,6 +82,7 @@ public class BuildGamePlugin extends Notifier
 					user.addProperty(property);
 				}
 				property.setScore(property.getScore() + pointValue);
+				
 				user.save();
 			}
 		}
