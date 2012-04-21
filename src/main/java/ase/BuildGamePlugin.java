@@ -9,6 +9,7 @@ import hudson.maven.MavenModuleSet;
 import hudson.model.BuildListener;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.Result;
 import hudson.model.User;
 import hudson.scm.ChangeLogSet;
 import hudson.scm.ChangeLogSet.Entry;
@@ -40,49 +41,58 @@ public class BuildGamePlugin extends Notifier
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException
 	{
-		listener.getLogger().println("Executing BuildGame plugin...");
-
-		String project = getProjectId(build.getProject());
-		listener.getLogger().println("Project Id: " + project);
-		listener.getLogger().println("Sonar URL: " + sonarUrl);
-		double pointValue = ComputePoints.getPointValue(project, sonarUrl, sonarUsername, sonarPassword);
-		listener.getLogger().println("That build was worth " + pointValue + " points.");
-		listener.getLogger().println("Distributing points among players involved with this build...");
-		
-		Set<User> players = new TreeSet<User>();
-		ChangeLogSet<? extends Entry> changeSet = build.getChangeSet();
-		
-		if(changeSet != null)
+		boolean buildSuccess = build.getExecutor().abortResult().isBetterOrEqualTo(Result.SUCCESS);
+		if (buildSuccess)
 		{
-			int count = 1;
-			for(Entry entry : changeSet)
+			listener.getLogger().println("Executing BuildGame plugin...");
+
+			String project = getProjectId(build.getProject());
+			listener.getLogger().println("Project Id: " + project);
+			listener.getLogger().println("Sonar URL: " + sonarUrl);
+			double pointValue = ComputePoints.getPointValue(project, sonarUrl, sonarUsername, sonarPassword);
+			listener.getLogger().println("That build was worth " + pointValue + " points.");
+			listener.getLogger().println("Distributing points among players involved with this build...");
+
+			Set<User> players = new TreeSet<User>();
+			ChangeLogSet<? extends Entry> changeSet = build.getChangeSet();
+
+			if (changeSet != null)
 			{
-				players.add(entry.getAuthor());
-				listener.getLogger().println("Contributor " + count + ": " + entry.getAuthor());
-				count++;
+				int count = 1;
+				for (Entry entry : changeSet)
+				{
+					players.add(entry.getAuthor());
+					listener.getLogger().println("Contributor " + count + ": " + entry.getAuthor());
+					count++;
+				}
 			}
+
+			updateBuildersScore(players, pointValue);
+
+			listener.getLogger().println("Finished BuildGame plugin execution.");
 		}
-		
-		updateBuildersScore(players, pointValue);
-		
-		listener.getLogger().println("Finished BuildGame plugin execution.");
+		else
+		{
+			listener.getLogger().println("Build did not complete successfully. Skpping BuildGame plugin.");
+		}
+
 		return true;
 	}
 
 	private void updateBuildersScore(Set<User> players, double pointValue) throws IOException
 	{
-		if(pointValue != 0)
+		if (pointValue != 0)
 		{
-			for(User user : players)
+			for (User user : players)
 			{
 				ScoreProperty property = user.getProperty(ScoreProperty.class);
-				if(property == null)
+				if (property == null)
 				{
 					property = new ScoreProperty();
 					user.addProperty(property);
 				}
 				property.setScore(property.getScore() + pointValue);
-				
+
 				user.save();
 			}
 		}
