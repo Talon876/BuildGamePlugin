@@ -7,9 +7,9 @@ import hudson.maven.ModuleName;
 import hudson.maven.MavenModule;
 import hudson.maven.MavenModuleSet;
 import hudson.model.BuildListener;
+import hudson.model.Result;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
-import hudson.model.Result;
 import hudson.model.User;
 import hudson.scm.ChangeLogSet;
 import hudson.scm.ChangeLogSet.Entry;
@@ -19,6 +19,7 @@ import hudson.tasks.Notifier;
 import hudson.tasks.Publisher;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -29,19 +30,23 @@ public class BuildGamePlugin extends Notifier
 	private String sonarUrl = "";
 	private String sonarUsername = "";
 	private String sonarPassword = "";
-
+	private String weightString = "";
+	private BuildListener listener;
+	
 	@DataBoundConstructor
-	public BuildGamePlugin(String sonarUrl, String sonarUsername, String sonarPassword)
+	public BuildGamePlugin(String sonarUrl, String sonarUsername, String sonarPassword, String weightString)
 	{
 		this.sonarUrl = sonarUrl;
 		this.sonarUsername = sonarUsername;
 		this.sonarPassword = sonarPassword;
+		this.weightString = weightString;
 	}
 
 	@Override
 	public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws IOException
 	{
 		boolean buildSuccess = build.getResult().isBetterOrEqualTo(Result.SUCCESS);
+		this.listener = listener;
 		
 		if (buildSuccess)
 		{
@@ -50,8 +55,11 @@ public class BuildGamePlugin extends Notifier
 			String project = getProjectId(build.getProject());
 			listener.getLogger().println("Project Id: " + project);
 			listener.getLogger().println("Sonar URL: " + sonarUrl);
-			double pointValue = ComputePoints.getPointValue(project, sonarUrl, sonarUsername, sonarPassword);
+			listener.getLogger().println("Weight String: " + weightString);
+			double[] weights = getWeightArray();
+			double pointValue = ComputePoints.getPointValue(project, sonarUrl, sonarUsername, sonarPassword, weights);
 			listener.getLogger().println("That build was worth " + pointValue + " points.");
+			
 			listener.getLogger().println("Distributing points among players involved with this build...");
 
 			Set<User> players = new TreeSet<User>();
@@ -78,6 +86,24 @@ public class BuildGamePlugin extends Notifier
 		}
 
 		return true;
+	}
+
+	private double[] getWeightArray()
+	{
+		String[] weights = weightString.split(",");
+		double[] doubleWeights = new double[weights.length];
+		for(int i = 0; i < doubleWeights.length; i++)
+		{
+			try
+			{
+				doubleWeights[i] = Double.parseDouble(weights[i]);
+			}
+			catch(Exception ex)
+			{
+				listener.getLogger().println("Could not parse weight for " + ComputePoints.getMetrics()[i] + ". Using the default weight: " + ComputePoints.getDefaultWeights()[i]);
+			}
+		}
+		return doubleWeights;
 	}
 
 	private void updateBuildersScore(Set<User> players, double pointValue) throws IOException
@@ -153,5 +179,10 @@ public class BuildGamePlugin extends Notifier
 	public String getSonarPassword()
 	{
 		return sonarPassword;
+	}
+	
+	public String getWeightString()
+	{
+		return weightString;
 	}
 }

@@ -1,17 +1,22 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
-  
-   <!-- Textfields -->  
-  
-   <f:entry title="Sonar URL" field="sonarUrl">
-        <f:textbox default="http://localhost:9000" value="${instance.getSonarUrl()}"/>
-   </f:entry>
    
-   <f:entry title="Sonar Database Username" field="sonarUsername">
-        <f:textbox default="sonar" value="${instance.getSonarUsername()}"/>
-   </f:entry>
-   
-  <f:entry title="Sonar Database Password" field="sonarPassword">
-        <f:textbox default="sonar" value="${instance.getSonarPassword()}"/>
-   </f:entry>
+  <f:advanced>
   
+	   <f:entry title="Sonar URL" field="sonarUrl">
+	        <f:textbox default="http://localhost:9000" value="${instance.getSonarUrl()}"/>
+	   </f:entry>
+	   
+	   <f:entry title="Sonar Database Username" field="sonarUsername">
+	        <f:textbox default="sonar" value="${instance.getSonarUsername()}"/>
+	   </f:entry>
+	   
+	  <f:entry title="Sonar Database Password" field="sonarPassword">
+	        <f:textbox default="sonar" value="${instance.getSonarPassword()}"/>
+	   </f:entry>
+	   
+	  <f:entry title="Weight String" field="weightString" help="/plugin/ase/BuildGamePlugin/sonar-metric-list.html">
+			<f:textbox default="1.0,1.0,-1.0,-1.0,-1.0,-1.0,0.1,1.0,1.0,-1.0,-1.0,-1.0,1.0,-1.0,-1.0,-1.0,0.0,-1.0" value="${instance.getWeightString()}"/>
+	  </f:entry>
+  
+  </f:advanced>
 </j:jelly>

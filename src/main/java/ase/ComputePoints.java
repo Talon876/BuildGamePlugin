@@ -39,7 +39,7 @@ public class ComputePoints
 	 * @param sonarUrl The http url to sonar
 	 * @param sonarUsername The username to the sonar database (default = sonar)
 	 * @param sonarPassword The password to the sonar database (default = sonar)
-	 * @param weights A 52-element array of weights corresponding to the metrics.
+	 * @param weights An array of weights corresponding to the metrics.
 	 * @return The score to assign to the developer
 	 */
 	public static double getPointValue(String projectName, String sonarUrl, String sonarUsername, String sonarPassword, double[] weights)
@@ -70,5 +70,15 @@ public class ComputePoints
 		}
 		DecimalFormat twoD = new DecimalFormat("#.##");
 		return Double.valueOf(twoD.format(pointValue));
+	}
+	
+	public static String[] getMetrics()
+	{
+		return ComputePoints.METRICS;
+	}
+	
+	public static double[] getDefaultWeights()
+	{
+		return ComputePoints.DEFAULT_WEIGHTS;
 	}
 }
