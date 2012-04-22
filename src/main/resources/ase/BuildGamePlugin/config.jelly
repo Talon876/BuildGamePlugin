@@ -14,7 +14,7 @@
 	        <f:textbox default="sonar" value="${instance.getSonarPassword()}"/>
 	   </f:entry>
 	   
-	  <f:entry title="Weight String" field="weightString" help="/plugin/ase/BuildGamePlugin/sonar-metric-list.html">
+	  <f:entry title="Weight String" field="weightString" help="/plugin/BuildGamePlugin/sonar-metric-list.html">
 			<f:textbox default="1.0,1.0,-1.0,-1.0,-1.0,-1.0,0.1,1.0,1.0,-1.0,-1.0,-1.0,1.0,-1.0,-1.0,-1.0,0.0,-1.0" value="${instance.getWeightString()}"/>
 	  </f:entry>
   
